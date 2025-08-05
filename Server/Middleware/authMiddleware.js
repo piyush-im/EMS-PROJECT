@@ -22,7 +22,7 @@ const verifyUser = async (req, res, next) => {
         req.user = user;
         next(); // Continue with the next middleware or route handler
     } catch (error) {
-        return res.status(500).json({ success: false, error: "Server error" });
+        return res.status(500).json({ success: false, error: "Server error"+error });
     }
 }
 

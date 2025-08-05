@@ -88,7 +88,13 @@ const upload=multer({storage:storage});
         const { id } = req.params; // Corrected the typo here
         
         try {
-            const employee= await Employee.findById({_id:id}).populate('userId',{password:0}).populate("department")
+            let employee
+             employee= await Employee.findById({_id:id}).populate('userId',{password:0}).populate("department")
+             if(!employee){
+                employee=await Employee.findOne({userId:id})
+                .populate('userId',{password:0})
+                .populate("department")
+             }
             return res.status(200).json({ success: true, employee});
         } catch (error) {
             console.log(error);

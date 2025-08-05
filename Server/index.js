@@ -7,6 +7,7 @@ import employeeRouter from './routes/employee.js';
 import connectToDatabase from './db/db.js';
 import dotenv from 'dotenv';  // Using ES module import
 import { upload } from './controller/employeeController.js';
+import leaveRouter from './routes/leave.js'
 
 // Load environment variables from .env file
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRouter);
 app.use('/api/salary',salaryRouter)
+app.use('/api/leave',leaveRouter)
 
 const PORT = process.env.PORT || 500;  // Default to 5000 if PORT is not defined in .env
 
