@@ -1,37 +1,69 @@
-import Salary from "../Models/Salary.js"
+import Salary from "../Models/Salary.js";
+import Employee from "../Models/Employee.js";
 
-const addSalary=async (req,res)=>{
-    try{
-        const {employeeId,basicSalary,allowances,deductions,payDate}=req.body
-        
-        const totalSalary=parseInt(basicSalary)+parseInt(allowances)-parseInt(deductions)
+// Add Salary
+const addSalary = async (req, res) => {
+  try {
+    const { employeeId, basicSalary, allowances, deductions, payDate } = req.body;
 
-        const newSalary=new Salary({
-            employeeId,
-            basicSalary,
-            allowances,
-            deductions,
-            netSalary: totalSalary,
-            payDate
-            
-        })
-        await newSalary.save()
+    const totalSalary =
+      parseInt(basicSalary) + parseInt(allowances) - parseInt(deductions);
 
-        return res.status(200).json({success:true})
-    }catch(error){
-        return res.status(500).json({success:false,error:"Error saving salary"})
+    const newSalary = new Salary({
+      employeeId,
+      basicSalary,
+      allowances,
+      deductions,
+      netSalary: totalSalary,
+      payDate,
+    });
+
+    await newSalary.save();
+
+    return res.status(200).json({ success: true, message: "Salary added successfully" });
+  } catch (error) {
+    console.error("Error saving salary:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Error saving salary" });
+  }
+};
+
+// Get Salary
+const getSalary = async (req, res) => {
+  try {
+    const { id, role } = req.params;
+    console.log("Role:", role);
+
+    let salary;
+
+    if (role === "admin") {
+      // Admin can directly fetch salaries by employeeId
+      salary = await Salary.find({ employeeId: id }).populate(
+        "employeeId",
+        "employeeId name"
+      );
+    } else {
+      // User role → find employee linked to userId
+      const employee = await Employee.findOne({ userId: id });
+
+      if (!employee) {
+        return res.status(404).json({ success: false, error: "Employee not found" });
+      }
+
+      salary = await Salary.find({ employeeId: employee._id }).populate(
+        "employeeId",
+        "employeeId name"
+      );
     }
-}
 
-const getSalary=async (req,res)=>{
-    try{
-        const {id}=req.params;
-        const salary=await Salary.find({employeeId:id}).populate('employeeId','employeeId')
-        return res.status(200).json({success:true,salary})
+    return res.status(200).json({ success: true, salary });
+  } catch (error) {
+    console.error("Error fetching salary:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Salary get server error" });
+  }
+};
 
-    }catch(error){
-        return res.status(500).json({success:false,error:"slary get server Error"})
-}
-}
-
-export {addSalary,getSalary}
+export { addSalary, getSalary };

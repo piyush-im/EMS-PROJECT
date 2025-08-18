@@ -13,7 +13,7 @@ const AdminDashboard = () => {
                 <Navbar />
                 
                 {/* ✅ Show AdminSummary only on /admin-dashboard */}
-                {location.pathname === "/admin-dashboard" && <AdminSummary />}
+              
 
                 {/* Renders the nested route (departments, etc.) */}
                 <Outlet />

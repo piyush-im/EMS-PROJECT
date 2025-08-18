@@ -1,16 +1,19 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // ✅ Added missing import
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../../Context/AuthContext';
+
 
 const View = () => {
-  const [salaries, setSalaries] = useState(null);
-  const [filteredSalaries, setfilteredSalaries] = useState(null);
+  const [salaries, setSalaries] = useState([]);
+  const [filteredSalaries, setfilteredSalaries] = useState([]);
   const { id } = useParams();
   let sno = 1;
+  const {user}=useAuth();
 
   const fetchSalaries = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/salary/${id}`, {
+      const response = await axios.get(`http://localhost:5000/api/salary/${id}/${user.role}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -21,6 +24,7 @@ const View = () => {
         setfilteredSalaries(response.data.salary);
       }
     } catch (error) {
+      console.error(error);
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.error || "An error occurred";
         alert(errorMessage);
@@ -34,22 +38,22 @@ const View = () => {
 
   const filtereSalaries = (e) => {
     const q = e.target.value;
-    const filteredRecords = salaries.filter((leave) =>
-      leave.employeeId.toLowerCase().includes(q.toLowerCase())
+    const filteredRecords = salaries.filter((sal) =>
+      sal.employeeId.employeeId.toLowerCase().includes(q.toLowerCase())
     );
     setfilteredSalaries(filteredRecords);
   };
 
   return (
     <>
-      {filteredSalaries === null ? (
+      {!filteredSalaries ? (
         <div>Loading...</div>
       ) : (
-        <div className="overflow-x auto p-5">
+        <div className="overflow-x-auto p-5">
           <div className="text-center">
             <h2 className="text-2xl font-bold">Salary History</h2>
           </div>
-          <div className="flex justify-end mu-3">
+          <div className="flex justify-end my-3">
             <input
               type="text"
               placeholder="Search by Employee Id"
@@ -64,10 +68,10 @@ const View = () => {
                 <tr>
                   <th className="px-6 py-3">SNO</th>
                   <th className="px-6 py-3">Emp Id</th>
-                  <th className="px-6 py-3">Salary</th>
-                  <th className="px-6 py-3">Allowence</th>
-                  <th className="px-6 py-3">Deduction</th>
-                  <th className="px-6 py-3">Total</th>
+                  <th className="px-6 py-3">Basic Salary</th>
+                  <th className="px-6 py-3">Allowances</th>
+                  <th className="px-6 py-3">Deductions</th>
+                  <th className="px-6 py-3">Net Salary</th>
                   <th className="px-6 py-3">Pay Date</th>
                 </tr>
               </thead>
@@ -76,8 +80,9 @@ const View = () => {
                   <tr key={salary._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="px-6 py-3">{sno++}</td>
                     <td className="px-6 py-3">{salary.employeeId.employeeId}</td>
-                    <td className="px-6 py-3">{salary.allownces}</td>
-                    <td className="px-6 py-3">{salary.deduction}</td>
+                    <td className="px-6 py-3">{salary.basicSalary}</td>
+                    <td className="px-6 py-3">{salary.allowances}</td>
+                    <td className="px-6 py-3">{salary.deductions}</td>
                     <td className="px-6 py-3">{salary.netSalary}</td>
                     <td className="px-6 py-3">{new Date(salary.payDate).toLocaleDateString()}</td>
                   </tr>

@@ -8,6 +8,8 @@ import connectToDatabase from './db/db.js';
 import dotenv from 'dotenv';  // Using ES module import
 import { upload } from './controller/employeeController.js';
 import leaveRouter from './routes/leave.js'
+import settingRouter from './routes/setting.js'
+import dashbaordRouter from './routes/dashboard.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -26,8 +28,10 @@ app.use('/api/department', departmentRouter);
 app.use('/api/employee', employeeRouter);
 app.use('/api/salary',salaryRouter)
 app.use('/api/leave',leaveRouter)
+app.use('/api/setting',settingRouter)
+app.use('/api/dashboard',dashbaordRouter)
 
-const PORT = process.env.PORT || 500;  // Default to 5000 if PORT is not defined in .env
+const PORT = process.env.PORT || 5000;  // Default to 5000 if PORT is not defined in .env
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
