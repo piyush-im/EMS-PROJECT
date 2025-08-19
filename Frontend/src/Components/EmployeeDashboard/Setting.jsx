@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../../Context/authContext';
+import { useAuth } from '../../Context/AuthContext';
 
 function Setting() {
   const navigate = useNavigate();
