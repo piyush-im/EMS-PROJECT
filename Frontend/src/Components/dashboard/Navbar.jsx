@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../../Context/AuthContext";
 
-
 const Navbar =()=>{
     const {user,logout}=useAuth()
     return(

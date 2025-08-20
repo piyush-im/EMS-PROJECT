@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../../Context/AuthContext";
-import axios from 'axios';
+import { useAuth } from "../../Context/AuthContext";import axios from 'axios';
 
 function Add() {
   const { user } = useAuth();
